@@ -1,6 +1,7 @@
 resource "google_container_cluster" "gke" {
-  name     = "fraud-cluster"
-  location = var.region
+  name                = "fraud-cluster"
+  location            = "us-central1-a"
+  deletion_protection = false
 
   depends_on = [
     google_project_service.required_apis
@@ -20,7 +21,7 @@ resource "google_container_cluster" "gke" {
   }
 
   private_cluster_config {
-    enable_private_nodes    = true
+    enable_private_nodes    = false
     enable_private_endpoint = false
   }
 
@@ -32,15 +33,18 @@ resource "google_container_cluster" "gke" {
 resource "google_container_node_pool" "nodes" {
   name     = "node-pool"
   cluster  = google_container_cluster.gke.name
-  location = var.region
+  location = "us-central1-a"
 
-  depends_on = [
-    google_container_cluster.gke
-  ]
-
-  node_count = 2
+  node_count = 1
 
   node_config {
     machine_type = "e2-medium"
+
+    disk_size_gb = 20
+    disk_type    = "pd-standard"
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
   }
 }
