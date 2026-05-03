@@ -15,6 +15,24 @@ resource "google_service_account" "github_actions" {
   ]
 }
 
+resource "google_project_iam_member" "fraud_sa_logging" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:fraud-sa@${var.project_id}.iam.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "fraud_sa_gke" {
+  project = var.project_id
+  role    = "roles/container.developer"
+  member  = "serviceAccount:fraud-sa@${var.project_id}.iam.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "fraud_sa_storage" {
+  project = var.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:fraud-sa@${var.project_id}.iam.gserviceaccount.com"
+}
+
 resource "google_project_iam_member" "pubsub_access" {
   project = var.project_id
   role    = "roles/pubsub.editor"

@@ -1,7 +1,6 @@
 resource "google_container_cluster" "gke" {
   name                = "fraud-cluster"
   location            = "us-central1-a"
-  deletion_protection = false
 
   depends_on = [
     google_project_service.required_apis
